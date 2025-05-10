@@ -29,14 +29,14 @@ public class IntegralExecutor {
         // --- Pętla 2: odbiór wyników ---
         double total = 0.0;
         for (Future<Double> f : futures) {
-            total += f.get();                  // blokuje do ukończenia zadania
+            total += f.get(); // blokuje do ukończenia zadania
         }
 
         pool.shutdown();
 
         // --- Raport ---
         System.out.printf(
-                "∫_[%.1f, %.1f] sin(x) dx ≈ %.12f (wartość dokładna: 2.0)%n",
+                "∫_[%.1f, %.2f] sin(x) dx ≈ %.12f (wartość dokładna: 2.0)%n",
                 XP, XK, total
         );
     }

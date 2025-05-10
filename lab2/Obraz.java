@@ -1,4 +1,3 @@
-// Obraz.java с новым методом calculate_for_range
 import java.util.Random;
 
 class Obraz {
@@ -52,7 +51,6 @@ class Obraz {
         }
     }
 
-    // Существующий метод: подсчет количества вхождений одного символа
     public synchronized int calculate_for_char(int charIndex) {
         int count = 0;
         for(int i = 0; i < size_n; i++) {
@@ -66,12 +64,11 @@ class Obraz {
         return count;
     }
 
-    // Новый метод: подсчет и вывод символов в указанном диапазоне [startIndex, endIndex)
     public void calculate_for_range(int startIndex, int endIndex) {
         for(int k = startIndex; k < endIndex; k++) {
             int count = calculate_for_char(k);
-            // Используем текущее имя потока для вывода
-            print_for_char(k, count, Thread.currentThread().getName());
+            
+            // print_for_char(k, count, Thread.currentThread().getName());
         }
     }
 
@@ -84,9 +81,9 @@ class Obraz {
     }
 
     public void print_histogram() {
-        for(int i = 0; i < 94; i++) {
-            System.out.print(tab_symb[i] + " " + histogram[i] + "\\n");
-        }
+        // for(int i = 0; i < 94; i++) {
+        //     System.out.print(tab_symb[i] + " " + histogram[i] + "\\n");
+        // }
     }
 
     public synchronized boolean compare_histograms() {

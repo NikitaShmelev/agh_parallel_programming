@@ -27,11 +27,11 @@ class Obraz {
         for(int i = 0; i < n; i++) {
             for(int j = 0; j < m; j++) {
                 tab[i][j] = tab_symb[random.nextInt(94)];
-                System.out.print(tab[i][j] + " ");
+                // System.out.print(tab[i][j] + " ");
             }
-            System.out.print("\n");
+            // System.out.print("\n");
         }
-        System.out.print("\n\n");
+        // System.out.print("\n\n");
 
         histogram = new int[94];
         hist_parallel = new int[94];
@@ -83,7 +83,7 @@ class Obraz {
                 }
             }
             incrementParallel(k, count);  // synchronizowane zapisanie wyniku
-            print_for_char(k, count, Thread.currentThread().getName());
+            // print_for_char(k, count, Thread.currentThread().getName());
         }
     }
 
@@ -103,9 +103,9 @@ class Obraz {
 
     // Wypisywanie histogramu sekwencyjnego
     public void print_histogram() {
-        for(int i = 0; i < 94; i++) {
-            System.out.print(tab_symb[i] + " " + histogram[i] + "\n");
-        }
+        // for(int i = 0; i < 94; i++) {
+        //     System.out.print(tab_symb[i] + " " + histogram[i] + "\n");
+        // }
     }
 
     // Porównanie histogramów
@@ -132,10 +132,10 @@ class Watek extends Thread {
     }
 
     public void run() {
-        for (int k = startIndex; k < endIndex; k++) {
-            int count = obraz.calculate_for_char(k);
-            obraz.print_for_char(k, count, this.getName());
-        }
+        // for (int k = startIndex; k < endIndex; k++) {
+        //     int count = obraz.calculate_for_char(k);
+        //     obraz.print_for_char(k, count, this.getName());
+        // }
     }
 }
 
@@ -182,7 +182,7 @@ public class HistogramAllInOne {
         obraz.clear_histogram();
         obraz.calculate_histogram();
         System.out.println("\nSequential histogram:");
-        obraz.print_histogram();
+        // obraz.print_histogram();
     }
 
     public static void runParallelThreadVersion(Scanner scanner, Obraz obraz) {

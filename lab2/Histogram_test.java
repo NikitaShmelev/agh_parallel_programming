@@ -26,7 +26,7 @@ class Histogram_test {
         obraz.clear_histogram();
         obraz.calculate_histogram();
         System.out.println("\nSequential histogram:");
-        obraz.print_histogram();
+        // obraz.print_histogram();
     }
 
     // Вариант 1 – потоки по одному символу (класс Watek не включён, но можно добавить отдельно)

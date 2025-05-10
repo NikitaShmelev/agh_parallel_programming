@@ -10,6 +10,6 @@ class Watek extends Thread {
     @Override
     public void run() {
         int count = obraz.calculate_for_char(charIndex);
-        obraz.print_for_char(charIndex, count, this.getName());
+        // obraz.print_for_char(charIndex, count, this.getName());
     }
 }

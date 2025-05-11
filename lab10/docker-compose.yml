@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  openmp_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openmp_runner_2
+    stdin_open: true  # Keep STDIN open if needed
+    tty: true         # Allocate a pseudo-TTY
+    environment:
+      - OMP_NUM_THREADS=4

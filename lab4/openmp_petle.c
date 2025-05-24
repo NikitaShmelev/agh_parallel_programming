@@ -7,6 +7,7 @@
 
 int main ()
 {
+  // finish 
   double a[WYMIAR][WYMIAR];
 
   for(int i=0;i<WYMIAR;i++) for(int j=0;j<WYMIAR;j++) a[i][j]=1.02*i+1.01*j;
@@ -34,9 +35,9 @@ int main ()
       suma_parallel += a[i][j];
       // #pragma omp ordered
       // dla dekompozycji 1D
-      //printf("(%1d,%1d)-W_%1d ",i,j,omp_get_thread_num()); 
+      printf("(%1d,%1d)-W_%1d ",i,j,omp_get_thread_num()); 
       // dla dekompozycji 2D
-      //printf("(%1d,%1d)-W_%1d,%1d ",i,j,id_w,omp_get_thread_num()); 
+      printf("(%1d,%1d)-W_%1d,%1d ",i,j,id_w,omp_get_thread_num()); 
     }
     // #pragma omp ordered
     printf("\n");

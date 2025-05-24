@@ -1,38 +1,100 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <omp.h>
+#include<stdlib.h>
+#include<stdio.h>
+#include<omp.h>
 
-#define WYMIAR 18
+int f_threadprivate = 0;
+#pragma omp threadprivate(f_threadprivate)
 
-int main ()
-{
-  double a[WYMIAR];
+int main(){
+  
+#ifdef _OPENMP
+  printf("\nKompilator rozpoznaje dyrektywy OpenMP\n");
+#endif
 
-#pragma omp  parallel for default(none) shared(a)
-  for(int i=0;i<WYMIAR;i++) a[i]=1.02*i;
-
-  // pÄtla sekwencyjna
-  double suma=0.0;
-  for(int i=0;i<WYMIAR;i++) {
-      suma += a[i];
+  int liczba_watkow;
+  
+  int a_shared = 1;
+  int b_private = 2;
+  int c_firstprivate = 3;
+  int e_atomic = 5;
+  
+  // Ustawienie liczby wątków na 5 zgodnie z punktem 9
+  omp_set_num_threads(5);
+  
+  printf("przed wejsciem do obszaru rownoleglego - nr_threads %d, thread ID %d\n",
+        omp_get_num_threads(), omp_get_thread_num());
+  printf("\ta_shared \t= %d\n", a_shared);
+  printf("\tb_private \t= %d\n", b_private);
+  printf("\tc_firstprivate \t= %d\n", c_firstprivate);
+  printf("\te_atomic \t= %d\n", e_atomic);
+  printf("\tf_threadprivate \t= %d\n", f_threadprivate);
+  
+  // Pierwszy obszar równoległy
+#pragma omp parallel default(none) shared(a_shared, e_atomic) private(b_private) firstprivate(c_firstprivate)
+  {
+    int i;
+    int d_local_private;
+    
+    
+    d_local_private = a_shared + c_firstprivate;
+    #pragma omp barrier
+    // Sekcja krytyczna dla całej pętli modyfikującej a_shared
+    #pragma omp critical
+    {
+      for(i=0; i<10; i++){
+        a_shared++; 
+      }
+    }
+    
+    for(i=0; i<10; i++){
+      c_firstprivate += omp_get_thread_num();
+    }
+    
+    // Operacje atomowe na e_atomic
+    for(i=0; i<10; i++){
+      #pragma omp atomic
+      e_atomic += omp_get_thread_num();
+    }
+    
+    // Bariera synchronizująca przed wydrukami
+    
+    // Ustawienie wartości f_threadprivate na ID wątku
+    f_threadprivate = omp_get_thread_num();
+    #pragma omp barrier
+    #pragma omp critical 
+    {
+        printf("\nw obszarze równoległym: aktualna liczba watkow %d, moj ID %d\n",
+            omp_get_num_threads(), omp_get_thread_num());
+        printf("\ta_shared \t= %d\n", a_shared);
+        printf("\tb_private \t= %d\n", b_private);
+        printf("\tc_firstprivate \t= %d\n", c_firstprivate);
+        printf("\td_local_private = %d\n", d_local_private);
+        printf("\te_atomic \t= %d\n", e_atomic);
+        printf("\tf_threadprivate = %d\n", f_threadprivate);
+    }
   }
   
-  printf("Suma wyrazĂłw tablicy: %lf\n", suma);
-
-  // pÄtla do modyfikacji - docelowo rĂłwnolegĹa w OpenMP
-  double suma_parallel=0.0;
-  // ...
-  for(int i=0;i<WYMIAR;i++) {
-    int id_w = omp_get_thread_num();
-    // ...
-      suma_parallel += a[i];
-      // ...
-#pragma omp ordered
-      printf("a[%2d]->W_%1d  \n",i,id_w); 
+  printf("\npo zakonczeniu pierwszego obszaru rownoleglego:\n");
+  printf("\ta_shared \t= %d\n", a_shared);
+  printf("\tb_private \t= %d\n", b_private);
+  printf("\tc_firstprivate \t= %d\n", c_firstprivate);
+  printf("\te_atomic \t= %d\n", e_atomic);
+  printf("\tf_threadprivate \t= %d\n", f_threadprivate);
+  
+  // Drugi obszar równoległy
+#pragma omp parallel default(none) shared(a_shared, e_atomic) private(b_private) firstprivate(c_firstprivate)
+  {
+    printf("\nw drugim obszarze równoległym: aktualna liczba watkow %d, moj ID %d\n",
+          omp_get_num_threads(), omp_get_thread_num());
+    printf("\tf_threadprivate = %d\n", f_threadprivate);
   }
-
-  printf("\nSuma wyrazĂłw tablicy rĂłwnolegle (z klauzulÄ - ....: %lf\n",
-	 suma_parallel);
-
+  
+  printf("\npo zakonczeniu drugiego obszaru rownoleglego:\n");
+  printf("\ta_shared \t= %d\n", a_shared);
+  printf("\tb_private \t= %d\n", b_private);
+  printf("\tc_firstprivate \t= %d\n", c_firstprivate);
+  printf("\te_atomic \t= %d\n", e_atomic);
+  printf("\tf_threadprivate \t= %d\n", f_threadprivate);
+  
+  return 0;
 }
